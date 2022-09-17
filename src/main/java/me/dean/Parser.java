@@ -80,7 +80,7 @@ public class Parser {
             }
         }
         System.out.format("Finished parsing %d files in %dms.", files.length, Duration.between(start, Instant.now()).toMillis());
-        System.out.println("All Done! Wrote " + batchCount + " files to ../output/ (batch-size: " + batchSize + ")");
+        System.out.format("All Done! Wrote %d files to ../output/ (batch-size: %d)", batchCount, batchSize);
     }
 
     private void writeStringToFile(String content, File file) {
