@@ -4,7 +4,7 @@ This project takes an XBRL file and transforms it into a CSV file. The CSV file 
 
 #### Usage
 ```bash
-java XBRL-CSV.jar <folder-path> <batch-size>
+java -jar XBRL-CSV.jar <folder-path> <batch-size>
 java -jar XBRL-CSV.jar ../test-data 20
 ```
 
