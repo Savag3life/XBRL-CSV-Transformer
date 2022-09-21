@@ -79,6 +79,8 @@ public class Parser {
                 publish();
             }
         }
+
+        publish();
         System.out.format("Finished parsing %d files in %dms.", files.length, Duration.between(start, Instant.now()).toMillis());
         System.out.format("All Done! Wrote %d files to ../output/ (batch-size: %d)", batchCount, batchSize);
     }
@@ -97,6 +99,7 @@ public class Parser {
 
     public synchronized void publish() {
         new File("../output").mkdirs();
+        if (results.size() < 1) return;
         writeStringToFile(String.join("",  results), new File("../output", "results-batch-" + batchCount + ".txt"));
         results.clear();
         batchCount++;
