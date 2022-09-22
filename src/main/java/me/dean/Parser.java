@@ -82,7 +82,7 @@ public class Parser {
 
         publish();
         System.out.format("Finished parsing %d files in %dms.", files.length, Duration.between(start, Instant.now()).toMillis());
-        System.out.format("All Done! Wrote %d files to ../output/ (batch-size: %d)", batchCount, batchSize);
+        System.out.format("All Done! Wrote %d files to ../output/ (batch-size: %d)", batchCount - 1, batchSize);
     }
 
     private void writeStringToFile(String content, File file) {
