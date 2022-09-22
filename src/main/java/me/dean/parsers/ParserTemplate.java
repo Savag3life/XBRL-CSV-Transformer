@@ -31,7 +31,7 @@ public abstract class ParserTemplate<T> {
     }
 
     public String sanitize(String input) {
-        return input.replaceAll(",", ".");
+        return input;//.replaceAll(",", ".");
     }
 
     public static synchronized void publish(String valueSet, String entrySet) {
