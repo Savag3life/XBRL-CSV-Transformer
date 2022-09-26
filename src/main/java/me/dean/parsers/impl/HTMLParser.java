@@ -1,10 +1,12 @@
 package me.dean.parsers.impl;
 
+import me.dean.Record;
 import me.dean.parsers.ParserTemplate;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class HTMLParser extends ParserTemplate<Document> {
 
@@ -26,24 +28,21 @@ public class HTMLParser extends ParserTemplate<Document> {
             return null;
         }
 
+        this.outputValues.put("file:name", file.getName());
         return doc;
     }
 
     @Override
     public void parse(Document document) {
-        StringBuilder names = new StringBuilder();
-        StringBuilder values = new StringBuilder();
 
         document.select("ix|nonNumeric").forEach(e -> {
-                names.append(sanitize(e.attr("name"))).append(",");
-                values.append(sanitize(e.text())).append(",");
+            this.outputValues.put(e.attr("name"), e.text());
         });
 
         document.select("ix|nonFraction").forEach(e -> {
-            names.append(sanitize(e.attr("name"))).append(",");
-            values.append(sanitize(e.text())).append(",");
+            this.outputValues.put(e.attr("name"), e.text());
         });
 
-        publish(names.toString(), values.toString());
+        new Record(this.outputValues);
     }
 }

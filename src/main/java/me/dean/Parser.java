@@ -13,18 +13,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Parser {
+public class Parser implements Formats {
 
     @Getter private static Parser instance;
 
-    private final List<String> results = new ArrayList<>();
+    @Getter private final List<String> keys = new ArrayList<>() {{ add("file:name"); }};
+    private final List<Record> records = new ArrayList<>();
 
     private final List<ParserTemplate<?>> parsers = Arrays.asList(
             new XMLParser(),
             new HTMLParser()
     );
-
-    private static int batchCount = 1;
 
     public Parser(String[] args) {
 
@@ -55,17 +54,8 @@ public class Parser {
             return;
         }
 
-        int batchSize = -1;
-        if (args.length > 2) {
-            try {
-                batchSize = Integer.parseInt(args[1]);
-            } catch (NumberFormatException e) {
-                System.out.println("The specified batch size is not a valid integer.");
-                return;
-            }
-        }
-
         Instant start = Instant.now();
+
         for (File f : files) {
             parsers.stream()
                     .filter(parser -> f.getName().endsWith(parser.getFileExtension()))
@@ -74,15 +64,12 @@ public class Parser {
                         parser.log("Parsing file: " + f.getName());
                         parser.handle(f);
                     });
-
-            if (batchSize > 0 && results.size() >= batchSize) {
-                publish();
-            }
         }
 
         publish();
-        System.out.format("Finished parsing %d files in %dms.", files.length, Duration.between(start, Instant.now()).toMillis());
-        System.out.format("All Done! Wrote %d files to ../output/ (batch-size: %d)", batchCount - 1, batchSize);
+        System.out.println("System counted %d unique columns.".formatted(keys.size() - 1));
+        System.out.format("Finished parsing %d files in %dms.\n", files.length, Duration.between(start, Instant.now()).toMillis());
+        System.out.format("All Done! Wrote %d rows to ./output/results.csv\n", records.size());
     }
 
     private void writeStringToFile(String content, File file) {
@@ -93,15 +80,27 @@ public class Parser {
         }
     }
 
-    public synchronized void addResult(String result) {
-        results.add(result);
+    public void addNewColumn(String key, String creator) {
+        System.out.println("Adding new column: \"" + key + "\" (created by '" + creator + "')");
+        keys.add(key);
+        this.records.forEach(record -> record.addNewColumn(""));
     }
 
-    public synchronized void publish() {
-        new File("../output").mkdirs();
-        if (results.size() < 1) return;
-        writeStringToFile(String.join("",  results), new File("../output", "results-batch-" + batchCount + ".txt"));
-        results.clear();
-        batchCount++;
+    public void addRecord(Record record) {
+        this.records.add(record);
+    }
+
+    public void publish() {
+        new File("output").mkdirs();
+
+        String keys = String.join(",", this.keys);
+        StringBuilder sb = new StringBuilder();
+        sb.append(keys).append("\n");
+
+        for (Record record : records) {
+            sb.append(arrayToCSV(record.getValues())).append("\n");
+        }
+
+        writeStringToFile(String.join("", sb.toString()), new File("output", "results.csv"));
     }
 }

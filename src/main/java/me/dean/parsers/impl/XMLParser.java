@@ -1,5 +1,6 @@
 package me.dean.parsers.impl;
 
+import me.dean.Record;
 import me.dean.parsers.ParserTemplate;
 import org.dom4j.Document;
 import org.dom4j.io.SAXReader;
@@ -27,19 +28,16 @@ public class XMLParser extends ParserTemplate<Document> {
             return null;
         }
 
+        this.outputValues.put("file:name", file.getName());
         return document;
     }
 
     @Override
     public void parse(Document document) {
-        StringBuilder names = new StringBuilder();
-        StringBuilder values = new StringBuilder();
-
         document.getRootElement().elementIterator().forEachRemaining(node -> {
-                names.append(sanitize(node.getName())).append(",");
-                values.append(sanitize(node.getText())).append(",");
+            this.outputValues.put(node.getName(), node.getText());
         });
 
-        publish(names.toString(), values.toString());
+        new Record(this.outputValues);
     }
 }
