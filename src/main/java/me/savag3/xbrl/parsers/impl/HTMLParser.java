@@ -1,7 +1,7 @@
-package me.savag3.parsers.impl;
+package me.savag3.xbrl.parsers.impl;
 
-import me.savag3.Record;
-import me.savag3.parsers.ParserTemplate;
+import me.savag3.xbrl.Record;
+import me.savag3.xbrl.parsers.ParserTemplate;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 

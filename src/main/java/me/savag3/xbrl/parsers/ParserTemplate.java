@@ -1,4 +1,4 @@
-package me.savag3.parsers;
+package me.savag3.xbrl.parsers;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package me.savag3;
+package me.savag3.xbrl;
 
 import java.util.List;
 

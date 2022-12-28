@@ -1,9 +1,9 @@
-package me.savag3;
+package me.savag3.xbrl;
 
 import lombok.Getter;
-import me.savag3.parsers.ParserTemplate;
-import me.savag3.parsers.impl.HTMLParser;
-import me.savag3.parsers.impl.XMLParser;
+import me.savag3.xbrl.parsers.ParserTemplate;
+import me.savag3.xbrl.parsers.impl.HTMLParser;
+import me.savag3.xbrl.parsers.impl.XMLParser;
 
 import java.io.File;
 import java.nio.file.Files;
